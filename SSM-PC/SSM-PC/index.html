@@ -1,0 +1,656 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+  <title>Shared Spatial Memory Through Predictive Coding</title>
+  
+  <meta name="author" content="Yu Guo">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" type="text/css" href="./projects.css">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+</head>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .left-image, .right-image-container {
+            margin: 10px;
+            text-align: center;
+        }
+        .right-image-container img,
+        .left-image img {
+            display: block;
+            width: 480px;
+            height: auto;
+            margin: 0 auto;
+        }
+        .right-image-container img {
+            display: none;
+        }
+        .right-image-container img.active {
+            display: block;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #2c3e50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+        button:hover {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            border: 2px solid #2c3e50;
+        }
+        .hover-zoom:hover {
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function showImage(imageId, imageName) {
+            var images = document.querySelectorAll('.right-image-container img');
+            images.forEach(function(img) {
+                img.classList.remove('active');
+            });
+            document.getElementById(imageId).classList.add('active');
+            document.getElementById('right-image-name').textContent = imageName;
+        }
+    </script>
+</head>
+<body style="width: 100%;">
+    <div style="width: 100%;">
+        <!-- Title -->
+        <div class="root-content" style="padding-top: 30px;">
+            <name>Shared Spatial Memory Through Predictive Coding</name>
+            <br>
+            <div id="author-list">
+                <a href="https://scholar.google.com/citations?user=yggQMJMAAAAJ">Zhengru Fang</a><sup>1, ⋆</sup>&nbsp;&nbsp;&nbsp;
+                <a href="https://scholar.google.com/citations?user=5qAe9ZMAAAAJ">Yu Guo</a><sup>1, ⋆</sup>&nbsp;&nbsp;&nbsp;
+                <a href="https://scholar.google.com/citations?user=c32E_h4AAAAJ">Jingjing Wang</a><sup>2, ⋆</sup>&nbsp;&nbsp;&nbsp;
+                <a href="https://scholar.google.com/citations?user=U1OSd-EAAAAJ">Yuang Zhang</a><sup>3</sup>&nbsp;&nbsp;&nbsp;
+                <a href="https://scholar.google.com/citations?user=YlRk19IAAAAJ">Haonan An</a><sup>1</sup>&nbsp;&nbsp;&nbsp;<br>
+                <a href="https://scholar.google.com/citations?user=XBg0AAkAAAAJ">Yinhai Wang</a><sup>3</sup>&nbsp;&nbsp;&nbsp;
+                <a href="https://scholar.google.com/citations?user=cs45mqMAAAAJ">Yuguang Fang</a><sup>1</sup>&nbsp;&nbsp;&nbsp;
+                
+            </div>
+            <div id="remark-list">
+                (⋆ indicates equal contribution)
+            </div>
+            <div id="institution-list">
+                <sup>1</sup> City University of Hong Kong&nbsp;&nbsp;&nbsp;
+                <sup>2</sup> Beihang University&nbsp;&nbsp;&nbsp;
+                <sup>3</sup> University of Washington
+            </div>
+            <p id="publication">
+                Arxiv 2025
+            </p>
+            <div id="button-list">
+                <span class="link-button">
+                    <a class="link-button-content", href="", target="_blank">
+                        <span>
+                            <i class="ai ai-arxiv"></i>
+                        </span>
+                        &nbsp;
+                        ArXiv
+                    </a>
+                </span>
+                <span class="link-button">
+                    <a class="link-button-content" href="", target="_blank">
+                        <span>
+                            <svg class="svg-inline--fa fa-file-pdf" aria-hidden="true" version="1.1" viewBox="0 0 16 16" width="1.2em" style="position: relative; top: 0.25em;"><path fill="currentColor" fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+                        </span>
+                        &nbsp; 
+                        Code
+                    </a>
+                </span>
+                <span class="link-button">
+                    <a class="link-button-content", href="#bib">
+                        <span>
+                            <svg class="svg-inline--fa fa-file-pdf" aria-hidden="true" style="position: relative; top: 0.15em;" width="1em" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-bookmarks" viewBox="0 0 16 16"> <path fill="currentColor" fill-rule="evenodd" d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5V4zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1H4z" fill="white"></path> <path fill="currentColor" fill-rule="evenodd" d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1z" fill="white"></path> </svg>
+                        </span>
+                        &nbsp;  
+                        BibTex
+                    </a>
+                </span>
+
+            </div>
+        </div>
+        <!-- Visual Results -->
+        <div style="background-color: #f5f5f5; margin-right: auto; margin-left: auto;">
+            <div class="root-content" style="padding-top: 10px;">
+                <h1 class="section-name">&#128293; Demo &#128293;</h1>
+                
+                <!-- Video 1-5 展示 -->
+                <div style="margin-top: 20px;">
+                    <!-- 第一行：Video 1, 2, 3 -->
+                    <div style="display: flex; justify-content: space-between; gap: 20px; margin-bottom: 15px;">
+                        <div style="flex: 1; text-align: center;">
+                            <video width="100%" controls style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <source src="./video/Video 1_lq.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <p style="margin-top: 12px; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; font-weight: bold;">
+                                <a href="#video1" style="color: #333; text-decoration: none;">&#128249; Video 1</a>
+                            </p>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <video width="100%" controls style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <source src="./video/Video 2_lq.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <p style="margin-top: 12px; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; font-weight: bold;">
+                                <a href="#video2" style="color: #333; text-decoration: none;">&#128249; Video 2</a>
+                            </p>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <video width="100%" controls style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <source src="./video/Video 3_lq.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <p style="margin-top: 12px; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; font-weight: bold;">
+                                <a href="#video3" style="color: #333; text-decoration: none;">&#128249; Video 3</a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 第二行：Video 4, 5 -->
+                    <div style="display: flex; justify-content: center; gap: 20px;">
+                        <div style="flex: 0 0 30%; text-align: center;">
+                            <video width="100%" controls style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <source src="./video/Video 4_lq.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <p style="margin-top: 12px; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; font-weight: bold;">
+                                <a href="#video4" style="color: #333; text-decoration: none;">&#128249; Video 4</a>
+                            </p>
+                        </div>
+                        <div style="flex: 0 0 30%; text-align: center;">
+                            <video width="100%" controls style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <source src="./video/Video 5_lq.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <p style="margin-top: 12px; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; font-weight: bold;">
+                                <a href="#video5" style="color: #333; text-decoration: none;">&#128249; Video 5</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper Information -->
+        <div class="root-content" style="padding-top: 0px;">
+            <div class="section-content">
+            <h1 class="section-name"> Abstract </h1>
+                <p class="section-content-text">
+                    Sharing and reconstructing a consistent spatial memory is a critical challenge in multi-agent systems, where partial observability and limited bandwidth often lead to catastrophic failures in coordination. We introduce a multi-agent predictive coding framework that reframes coordination as the minimization of mutual predictive uncertainty. Instantiated as an information bottleneck objective, it prompts agents to learn not only <strong>who</strong> and <strong>what</strong> to communicate but also <strong>when</strong>. At the foundation of this framework lies a grid-cell-like metric scaffold for self-localization, emerging spontaneously from self-supervised motion prediction. Building upon this internal spatial code, agents develop a bandwidth-efficient communication protocol and specialized neural populations that encode partners’ locations—an artificial analogue of hippocampal <strong>social place cells (SPCs)</strong>. These social representations are further enacted by a hierarchical reinforcement learning policy that actively explores to reduce joint uncertainty. On the Memory-Maze benchmark, our approach demonstrates exceptional resilience to bandwidth constraints: success degrades gracefully from 73.5% to 64.4% as bandwidth shrinks from 128 to 4 bits/step, whereas a full-broadcast baseline collapses from 67.6% to 28.6%. Our findings establish a theoretically principled and biologically plausible basis for how complex social representations emerge from a unified predictive drive, reframing social intelligence as an extension of individual cognition.
+            </div>
+
+            <div style="padding-top: 20px;">
+                <div style="display: grid; grid-template-columns: 0.47fr 0.53fr; grid-template-rows: 0.51fr 0.49fr; gap: 2px 1px; height: 530px;">
+                    <!-- 左上 - Fig1a -->
+                    <div style="grid-row: 1; grid-column: 1;">
+                        <img src="./image/Fig1a.png" alt="Fig1a" class="hover-zoom" style="width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.3s ease;"/>
+                    </div>
+                    <!-- 右侧 - Fig1b -->
+                    <div style="grid-row: 1 / 3; grid-column: 2;">
+                        <img src="./image/Fig1b.png" alt="Fig1b" class="hover-zoom" style="width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.3s ease;"/>
+                    </div>
+                    <!-- 左下 - Fig1c -->
+                    <div style="grid-row: 2; grid-column: 1;">
+                        <img src="./image/Fig1c.png" alt="Fig1c" class="hover-zoom" style="width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.3s ease;"/>
+                    </div>
+                </div>
+                <p style="text-align: center; font-size: 18px; color: #333; margin-top: 20px; line-height: 1.6;">
+                    <strong>Overview of the predictive coding framework for shared spatial memory</strong>. <strong>a</strong>, The multi-agent cooperative navigation task. <strong>b</strong>, The single-agent spatial memory module. <strong>c</strong>, The agent's decision-making process.
+                </p>
+            </div>
+
+            <div style="padding-top: 20px;">
+                <h1 class="section-name" id="video1">&#128249; Video 1: Collaborative Mapping and Exploration</h1>
+
+                <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 15px; line-height: 1.6; font-weight: bold;">
+                    <strong>1. Maze 1 (Randseed = 4, the box color represents the search target color)</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; font-weight: bold; height: 5px;">
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>Baseline - Full Broadcast</span>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>HRL-ICM</span>
+                    </div>
+                </div>
+                <video width="100%" controls style="margin-top: 15px;">
+                    <source src="./video/video 1.1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+
+                <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 15px; line-height: 1.6; font-weight: bold;">
+                    <strong>2. Maze 2 (Randseed = 5)</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; font-weight: bold; height: 5px;">
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>Baseline - Full Broadcast</span>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>HRL-ICM</span>
+                    </div>
+                </div>
+                <video width="100%" controls style="margin-top: 15px;">
+                    <source src="./video/video 1.2.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+
+                <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 15px; line-height: 1.6; font-weight: bold;">
+                    <strong>3. Maze 3 (Randseed = 6)</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; font-weight: bold; height: 5px;">
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>Baseline - Full Broadcast</span>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>HRL-ICM</span>
+                    </div>
+                </div>
+                <video width="100%" controls style="margin-top: 15px;">
+                    <source src="./video/video 1.3.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                
+                <p style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 15px; line-height: 1.6;">
+                    <strong>Summary:</strong>
+                    <br>
+                    • <strong>Full Broadcast</strong> exhibits a much faster map construction speed initially, but this advantage diminishes sharply after the 20-communication round quota is used up. 
+                    <br>
+                    • <strong>HRL-ICM strategy</strong> successfully avoids redundant communication, achieving faster mapping and exploration speeds.
+                </p>
+            </div>
+
+            <div style="padding-top: 20px;">
+                <h1 class="section-name" id="video2">&#128249; Video 2: Visualization of Emergent Social Place Cells</h1>
+
+                <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 15px; line-height: 1.6; font-weight: bold;">
+                    <strong>1. Case 1 (Self Moving & Partner Static)</strong>
+                </div>
+                <video width="100%" controls style="margin-top: 15px;">
+                    <source src="./video/video 2.1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div style="display: flex; justify-content: center; align-items: center; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; height: 5px;">
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>• <strong>Pure Place Cell:</strong> Strong activation</span>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>• <strong>Pure SPC:</strong> Weak activation</span>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>• <strong>Special SPC:</strong> Strong activation</span>
+                    </div>
+                </div>
+
+                <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 25px; line-height: 1.6; font-weight: bold;">
+                    <strong>2. Case 2 (Self Static & Partner Moving)</strong>
+                </div>
+                <video width="100%" controls style="margin-top: 15px;">
+                    <source src="./video/video 2.2.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div style="display: flex; justify-content: center; align-items: center; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; height: 5px;">
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>• <strong>Pure Place Cell:</strong> Weak activation</span>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>• <strong>Pure SPC:</strong> Strong activation</span>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>• <strong>Special SPC:</strong> Strong activation</span>
+                    </div>
+                </div>
+
+                <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 25px; line-height: 1.6; font-weight: bold;">
+                    <strong>3. Case 3 (Both Moving)</strong>
+                </div>
+                <video width="100%" controls style="margin-top: 15px;">
+                    <source src="./video/video 2.3.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div style="display: flex; justify-content: center; align-items: center; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; height: 5px;">
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>• <strong>Pure Place Cell:</strong> Strong activation</span>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>• <strong>Pure SPC:</strong> Strong activation</span>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>• <strong>Special SPC:</strong> Strong activation</span>
+                    </div>
+                </div>
+                <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 25px; line-height: 1.6; font-weight: bold;">
+                    <strong>4. Case 4 (Both Static)</strong>
+                </div>
+                <video width="100%" controls style="margin-top: 15px;">
+                    <source src="./video/video 2.4.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div style="display: flex; justify-content: center; align-items: center; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; height: 5px;">
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>• <strong>Pure Place Cell:</strong> No activation</span>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>• <strong>Pure SPC:</strong> No activation</span>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>• <strong>Special SPC:</strong> No activation</span>
+                    </div>
+                </div>
+                <p style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 20px; line-height: 1.6;">
+                    <strong>Summary:</strong>
+                    <br>
+                    • <strong>Pure Place Cell:</strong> Focus only on self movement.
+                    <br>
+                    • <strong>Pure Social Place Cell:</strong> Focus only on partner movement.
+                    <br>
+                    • <strong>Special Social Place Cell:</strong> Focus on both self and partner movement.
+                </p>
+                
+            </div>
+
+            <div style="padding-top: 20px;">
+                <h1 class="section-name" id="video3">&#128249; Video 3: Causal Intervention on Emergent Communication</h1>
+
+                <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 15px; line-height: 1.6; font-weight: bold;">
+                    <strong>1. Control Group (Collaborative search tasks without intervention)</strong>
+                </div>
+                <video width="80%" controls style="margin-top: 15px;">
+                    <source src="./video/video 3.1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; font-weight: bold; height: 5px;">
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>Sharing Space Memory</span>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: center;">
+                        <span>Researching Assistance</span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-top: 15px;">
+                    <video width="50%" controls>
+                        <source src="./video/video 3.1a.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <video width="50%" controls>
+                        <source src="./video/video 3.1b.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px;">
+                    <div style="text-align: left; flex: 1;">
+                        • Shared spatial memory during search.
+                    </div>
+                    <div style="text-align: left; flex: 1; margin-left: 60px;">
+                        • <span style="color: orange;">Sender (Agent 0)</span> finds the orange target and sends the "real information". 
+                        <br>
+                        • <span style="color: orangered;">Receiver (Agent 1)</span> successfully finds the target based on the information.
+                    </div>
+                </div>
+            
+                <div style="text-align: center; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 20px; margin-bottom: 8px;">
+                    <strong>Comparison of the Change Between the Exploration Map Before and After Sharing Spatial Memory</strong>
+                </div>
+                <iframe frameborder="0" class="juxtapose" width="384" height="384" src="https://cdn.knightlab.com/libs/juxtapose/latest/embed/index.html?uid=0b80ccfc-afea-11f0-ba1b-0e6f42328d7d"></iframe>
+            
+                <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 20px; line-height: 1.6; font-weight: bold;">
+                    <strong>2. Intervention Group (Collaborative search tasks with fake target)</strong>
+                </div>
+                <video width="80%" controls style="margin-top: 15px;">
+                    <source src="./video/video 3.2.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; line-height: 1.6;">
+
+                    • Intervention: message intercepted → fake target injected.
+                    <br>
+                    • <span style="color: orange;">Receiver (Agent 0)</span> trusts the fake target and gets stranded away from the real goal.
+                    <br>
+                    •  <strong>Persistent mis-match proves the shared map carries causal influence.</strong>
+                </p>
+
+                <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 20px; line-height: 1.6; font-weight: bold;">
+                    <strong>3. Intervention Group (Collaborative search tasks with ghost map)</strong>
+                </div>
+            <video width="80%" controls style="margin-top: 15px;">
+                <source src="./video/video 3.3.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; line-height: 1.6;">
+
+                • Intervention: message intercepted → fake map injected.
+                <br>
+                • <span style="color: orange;">Receiver (Agent 0)</span> executes the fake plan, keeps colliding with real walls.
+                <br>
+                •  <strong>Persistent mis-match proves the shared map carries causal influence.</strong>
+            </p>
+            </div>
+        <div style="padding-top: 20px;">
+            <h1 class="section-name" id="video4">&#128249; Video 4: Full Framework - Collaborative Mapping and Exploration</h1>
+                <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 15px; line-height: 1.6; font-weight: bold;">
+                    <strong>1. First-person Perspective BEV Map Reconstruction</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 10px; margin-bottom: 8px;">
+                    <div style="flex: 1; text-align: center;">
+                        <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333;">Agent 0</span>
+                    </div>
+                    <div style="flex: 1; text-align: center;">
+                        <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333;">Agent 1</span>
+                    </div>
+                    <div style="flex: 1; text-align: center;">
+                        <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333;">Agent 2</span>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <video width="100%" controls style="margin-top: 2px;">
+                        <source src="./video/video 4.1a.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-top: 0px; margin-bottom: 0px;">
+                <div style="flex: 1; text-align: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333;">RGB</span>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333;">BEV</span>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333;">BEV GT</span>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333;">RGB</span>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333;">BEV</span>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333;">BEV GT</span>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333;">RGB</span>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333;">BEV</span>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333;">BEV GT</span>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <video width="80%" controls style="margin-top: 15px;">
+                    <source src="./video/video 4.1b.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <p style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; line-height: 1.6;">
+                Single-agent Map Exploration (first-person → global perspective)
+            </p>
+            <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 15px; line-height: 1.6; font-weight: bold;">
+                <strong>2. Collaborative Mapping and Exploration (2 agents)</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px; gap: 20px;">
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333; margin-bottom:8px;">Maze 1 (Randseed = 5)</span>
+                    <video width="100%" controls>
+                        <source src="./video/video 4.2a.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333; margin-bottom:8px;">Maze 2 (Randseed = 19)</span>
+                    <video width="100%" controls>
+                        <source src="./video/video 4.2b.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 20px; gap: 20px;">
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333; margin-bottom:8px;">Maze 3 (Randseed = 58)</span>
+                    <video width="100%" controls>
+                        <source src="./video/video 4.2c.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333; margin-bottom:8px;">Maze 4 (Randseed = 82)</span>
+                    <video width="100%" controls>
+                        <source src="./video/video 4.2d.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+            <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 15px; line-height: 1.6; font-weight: bold;">
+                <strong>3. Collaborative Mapping and Exploration (3 agents)</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px; gap: 20px;">
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333; margin-bottom:8px;">Maze 5 (Randseed = 23)</span>
+                    <video width="100%" controls>
+                        <source src="./video/video 4.3a.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333; margin-bottom:8px;">Maze 6 (Randseed = 49)</span>
+                    <video width="100%" controls>
+                        <source src="./video/video 4.3b.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 20px; gap: 20px;">
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333; margin-bottom:8px;">Maze 7 (Randseed = 61)</span>
+                    <video width="100%" controls>
+                        <source src="./video/video 4.3c.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                    <span style="font-family: 'Comic Sans MS', cursive; font-size: 18px; font-weight: bold; color: #333; margin-bottom:8px;">Maze 8 (Randseed = 95)</span>
+                    <video width="100%" controls>
+                        <source src="./video/video 4.3d.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+        <div style="padding-top: 20px;">
+            <h1 class="section-name" id="video5">&#128249; Video 5: Spontaneous Formation of Grid-Cell-like Representations</h1>
+            <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 15px; line-height: 1.6; font-weight: bold;">
+                <strong>1. Evolution of Grid-Cell-like Neuronal Activation Patterns across Training Epochs</strong>
+            </div>
+            <video width="80%" controls>
+                <source src="./video/video 5.1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; line-height: 1.6;">
+                During training, the path integrator's neurons spontaneously evolve from disorganized firing patterns into highly regular, grid-cell-like representations.
+            </p>
+
+            <div style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 20px; color: #333; margin-top: 15px; line-height: 1.6; font-weight: bold;">
+                <strong>2. Changes in Path Planning Prediction Performance over Training Epochs</strong>
+
+            </div>
+            <video width="100%" controls>
+                <source src="./video/video 5.2.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 24px; margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; gap: 18px;">
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./image/video 5.2a.png" alt="fig1" style="width: 100%; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.10); margin-bottom: 8px;">
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./image/video 5.2b.png" alt="fig2" style="width: 100%; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.10); margin-bottom: 8px;">
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; gap: 18px;">
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./image/video 5.2c.png" alt="fig3" style="width: 100%; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.10); margin-bottom: 8px;">
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./image/video 5.2d.png" alt="fig4" style="width: 100%; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.10); margin-bottom: 8px;">
+                </div>
+            </div>
+        </div>
+
+        <p style="text-align: left; font-family: 'Comic Sans MS', cursive; font-size: 18px; color: #333; margin-top: 10px; line-height: 1.6;">
+            As this grid-cell-like structure emerges, the network's path integration accuracy steadily improves, and the predicted trajectory becomes highly stable.
+        </p>
+    </div>
+
+            <div>
+                <h1 class="section-name" style="margin-top: 30px; text-align: left; font-size: 25px;">
+                    BibTex
+                </h1>
+                <a name="bib"></a>
+                <pre style="margin-top: 5px;" class="bibtex">
+<code>@article{fang2025shared,
+  title={Shared Spatial Memory Through Predictive Coding},
+  author={Fang, Zhengru and Guo, Yu and Wang, Jingjing and Zhang, Yuang and An, Haonan and Wang, Yinhai and Fang, Yuguang},
+  journal={},
+  year={2025}
+}</code></pre>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$']]},
+        messageStyle: "none"
+    });
+</script>
